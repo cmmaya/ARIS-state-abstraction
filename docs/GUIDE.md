@@ -22,7 +22,8 @@ LaTeX workflow). Read sections 1–4 first. The rest is reference.
 ARIS lives next to this repo in `..\Auto-claude-code-research-in-sleep` (the upstream clone). Its skills are
 **linked** into `.claude\skills\` (junctions), so `git pull` there updates them here.
 
-Run these in a **PowerShell** terminal (Developer Mode must stay on, because the installer creates one symlink):
+Run these in a **PowerShell** terminal. The installer creates one symlink, so run step 1 in an **Administrator** Windows PowerShell
+(5.1 needs admin for symlinks even with Developer Mode) or in PowerShell 7 (`pwsh`) with Developer Mode on. Steps 2–3 need no admin:
 
 ```powershell
 # 1. Link the 87 ARIS skills + the fan-out agent into this project (also adds an ARIS block to CLAUDE.md)
@@ -402,7 +403,7 @@ Our three custom skills are real folders, not links, so updates never touch them
 | Problem | Fix |
 |---------|-----|
 | `python3: Python was not found` inside a skill | do step 2 of section 0 |
-| Installer: *failed to create … symbolic link* | Developer Mode off: Settings → System → For developers |
+| Installer: *failed to create … symbolic link* | run it in an Administrator PowerShell, or in `pwsh` (PowerShell 7) with Developer Mode on |
 | `/research-wiki`: *research_wiki.py not found* | rerun the installer (creates `.aris\tools`), or set the env var `ARIS_REPO` to the ARIS clone path before starting `claude` |
 | Review skills complain about the reviewer | set up the Codex MCP (section 0) |
 | CI "results.tex is out of date" | `python scripts/make_results_tex.py` and commit `paper/results.tex` |

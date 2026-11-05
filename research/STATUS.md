@@ -1,7 +1,7 @@
 # STATUS
 <!-- Last 3 sessions only, newest first. Written by /stage-summarizer. Older sessions: research/log/. -->
 
-**Resume:** run setup (docs/GUIDE.md §0), then fill RESEARCH_BRIEF.md.
+**Resume:** fill RESEARCH_BRIEF.md, then /research-lit "<topic>" to seed the wiki.
 **Stage:** idle · **Updated:** 2026-11-05
 
 ## S1 · 2026-11-05 · Repo setup
@@ -9,4 +9,5 @@
 - Files: CLAUDE.md, research/*, .claude/skills/{stage-summarizer,related-work-matrix,weekly-report}, scripts/make_results_tex.py, .github/workflows/latex.yml, docs/GUIDE.md
 - Results: —
 - Decided/discarded: D-001, X-001, X-002 (backlog.md)
-- Unfinished: ARIS skill install, python3 shim, `research-wiki` init (blocked by permissions; user runs them).
+- Setup completed by user: ARIS skills linked (88 entries, admin PowerShell), python3 shim, research-wiki initialized.
+- Unfinished: RESEARCH_BRIEF.md empty; optional MiKTeX + LaTeX Workshop, Codex reviewer MCP.
