@@ -4,6 +4,7 @@
 !.claude/skills/stage-summarizer/
 !.claude/skills/related-work-matrix/
 !.claude/skills/weekly-report/
+!.claude/skills/help-aris/
 .claude/agents/aris-fanout-leaf.md
 .claude/settings.local.json
 .aris/

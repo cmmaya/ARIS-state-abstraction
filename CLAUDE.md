@@ -1,6 +1,6 @@
 # Project: {project-name}
 
-Research repo on ARIS. Human guide: docs/GUIDE.md (don't load it). Load only the files the rule for the current task names.
+Research repo on ARIS. Human guide: docs/GUIDE.md (don't load it, except inside /help-aris). Load only the files the rule for the current task names.
 
 ## Pipeline Status
 
@@ -30,6 +30,7 @@ last_updated: ""
 - Experiments: write one JSON per run to experiments/results/ (format: experiments/results/README.md), then `python scripts/make_results_tex.py`.
 - Writing paper/*.tex: read the relevant results JSON and STATUS.md. Numbers only via \res… macros from paper/results.tex; check with `python scripts/make_results_tex.py --lint-paper`.
 - Friday / "weekly report": /weekly-report.
+- "How do I use /x?", "which skill for…?", "make a new skill": /help-aris.
 - Don't create figures, diagrams or schematics in state files.
 
 ## Files

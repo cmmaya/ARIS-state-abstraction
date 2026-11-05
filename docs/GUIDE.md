@@ -77,6 +77,7 @@ research-wiki/                ARIS knowledge base (papers, ideas, experiments, c
   stage-summarizer/           custom: end-of-session STATUS + log + backlog update
   related-work-matrix/        custom: papers × dimensions matrix, gap, related-work hooks
   weekly-report/              custom: one-page advisor update
+  help-aris/                  custom: how to use any skill here, which skill for a goal, how to make a new one
   <87 ARIS skills>            linked from ../Auto-claude-code-research-in-sleep (not committed)
 experiments/results/          one JSON per experiment → LaTeX macros
 paper/
@@ -274,6 +275,19 @@ Paper facts come from the wiki pages; unknown cells are `?`, never guessed. Pape
 ```
 One page (≤ 400 words): TL;DR · Done (✅/❌ against last week's plan) · Results table (every number cites its JSON) ·
 Decided/discarded · Questions for the advisor · Plan. Saved as `research/reports/weekly/2026-W45.md`.
+
+### `/help-aris` (any time you're unsure how to use something)
+```
+/help-aris                              overview: session loop + most useful commands for the current stage
+/help-aris experiment-plan              usage card for one skill
+/help-aris compare two methods over seeds   recommends 1–3 skills for a goal, then a usage card
+/help-aris new summarize advisor meeting notes into backlog rows   how to build a custom skill + a draft
+```
+The usage card covers: what the skill does and when not to use it · setup it needs and whether yours is done
+(Codex MCP connected? API key set? wiki exists?) with the fix command · syntax and options with defaults ·
+examples for this project · files it reads/writes · how it ties into STATUS / backlog / wiki / `\res…` macros ·
+which skill comes before and after · gotchas. It reads this guide, the skill's own SKILL.md and the ARIS docs, and never edits
+files (for `new`, it writes the skill only after you approve the draft).
 
 ---
 
