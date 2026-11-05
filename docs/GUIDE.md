@@ -1,5 +1,7 @@
 # Research repo guide
 
+Short version for the current phase: [QUICKSTART.md](QUICKSTART.md).
+
 How this repo works: ARIS (the skill library) plus our additions (state files, custom skills, rigor tooling,
 LaTeX workflow). Read sections 1–4 first. The rest is reference.
 

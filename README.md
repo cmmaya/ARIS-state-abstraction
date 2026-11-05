@@ -4,7 +4,8 @@ Research workspace built on [ARIS](https://github.com/wanshuiyin/Auto-claude-cod
 plus our additions: state files (`research/`), custom skills (`/stage-summarizer`, `/related-work-matrix`, `/weekly-report`, `/help-aris`),
 results-to-LaTeX macros, and a GitHub LaTeX workflow.
 
-**Start here: [docs/GUIDE.md](docs/GUIDE.md)**: setup, how STATUS / backlog / the knowledge wiki work, and examples.
+**Start here: [docs/QUICKSTART.md](docs/QUICKSTART.md)**: which skills to use for validating ideas, future work, methodology and formulation.
+Full manual: [docs/GUIDE.md](docs/GUIDE.md): setup, how STATUS / backlog / the knowledge wiki work, and examples.
 
 Quick start (after setup):
 
