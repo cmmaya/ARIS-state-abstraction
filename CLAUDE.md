@@ -1,76 +1,55 @@
 # Project: {project-name}
 
-> Research repo built on ARIS (Auto-Research-In-Sleep) plus our own additions.
-> Full how-to: `docs/GUIDE.md`. This file is loaded at every session, so it stays short and
-> **routes each task to the files it needs**. Do not load files that the rule for a task doesn't name.
+Research repo on ARIS. Human guide: docs/GUIDE.md (don't load it). Load only the files the rule for the current task names.
 
 ## Pipeline Status
 
-<!-- ARIS skills read and update this block. The stage-summarizer keeps `stage` and `next` in sync with research/STATUS.md. -->
-
 ```yaml
-stage: idle          # idle | idea-discovery | implementation | training | review | paper
-idea: ""             # Current idea title (one line)
-contract: ""         # Path to research_contract.md (e.g., idea-stage/docs/research_contract.md)
-current_branch: ""   # Git branch for this idea
-baseline: ""         # Baseline numbers for comparison
-training_status: idle  # idle | running | complete | failed
-language: en         # en | zh — controls skill output language
+stage: idle  # idle | idea-discovery | implementation | training | review | paper
+idea: ""
+contract: ""
+current_branch: ""
+baseline: ""
+training_status: idle
+language: en
 active_tasks: []
-next: ""             # Concrete next step
-last_updated: ""     # YYYY-MM-DD HH:mm — auto-updated by skills on every output write
+next: ""
+last_updated: ""
 ```
 
-## Routing rules
+## Rules
 
-**Session start** → read `research/STATUS.md` and `research-wiki/query_pack.md` only. Nothing else until a task needs it.
+- Session start: read research/STATUS.md (last 3 sessions) and research-wiki/query_pack.md. Nothing else until a task needs it.
+- Session end: run /stage-summarizer.
+- Prior work, ideas, results ("did we try X?", "which paper…"): /research-wiki query "<topic>" first; open wiki pages only if the pack names them. Never read the whole wiki.
+- "Was X decided / discarded / parked?": read research/backlog.md.
+- General concepts unrelated to the project: answer directly; no wiki, no state files.
+- Methodology (design, metrics, baselines, seeds): read research/backlog.md, research/hypotheses.md; open research/decisions.md only for a D-id's rationale. New decision → D-### row in backlog.md "Decided" + full entry in decisions.md. New hypothesis → H-### in hypotheses.md.
+- Idea discovery: read backlog.md first; don't re-propose Discarded items, or Parked items whose "Revisit when" isn't met. After selection: chosen → Decided; unselected → Parked (with revisit condition) or Discarded (with reason).
+- Related work: /related-work-matrix → research/related_work_matrix.md.
+- Experiments: write one JSON per run to experiments/results/ (format: experiments/results/README.md), then `python scripts/make_results_tex.py`.
+- Writing paper/*.tex: read the relevant results JSON and STATUS.md. Numbers only via \res… macros from paper/results.tex; check with `python scripts/make_results_tex.py --lint-paper`.
+- Friday / "weekly report": /weekly-report.
+- Don't create figures, diagrams or schematics in state files.
 
-**Session end** → run `/stage-summarizer` (updates `research/STATUS.md`, today's log, and the Mermaid schematic).
+## Files
 
-**Any question about prior work, ideas or results** ("what did we try for…", "which paper did…", "did X work?")
-→ run `/research-wiki query "<topic>"` first. Open full wiki pages (`research-wiki/papers|ideas|experiments|claims/*.md`)
-**only if the query pack points to them**. Never read the whole wiki or `ls`-and-read every page.
-
-**General concepts unrelated to this project** (e.g. "what is a Bellman operator?") → answer directly; do not touch the wiki.
-
-**Methodology work** (design of experiments, metrics, baselines, ablations) → read `research/decisions.md` and `research/hypotheses.md`.
-Record any new decision as a `D-###` entry and any new testable hypothesis as an `H-###` entry.
-
-**Idea discovery** (`/idea-discovery`, `/idea-creator`, brainstorming) → check `research/backlog.md` first (don't re-propose parked ideas
-unless their "revisit when" condition is met). After selection, **append every unselected idea to `research/backlog.md`** in the entry format there.
-
-**Related work** → update `research/related_work_matrix.md` with `/related-work-matrix`.
-
-**Experiments** → each run writes a JSON file to `experiments/results/` (format: `experiments/results/README.md`).
-Then run `python scripts/make_results_tex.py` to regenerate `paper/results.tex`.
-
-**Writing** (`/paper-write`, editing `paper/*.tex`) → read the latest results file(s) and `research/STATUS.md`.
-Use macros from `paper/results.tex` (e.g. `\resBaselineReturnMean`), **never typed numbers**.
-Check with `python scripts/make_results_tex.py --lint-paper`.
-
-**Friday** (or "weekly report") → run `/weekly-report`.
-
-## State files (what lives where)
-
-| File | Holds | Who writes it |
-|------|-------|---------------|
-| `research/STATUS.md` | current stage, recent decisions, open questions, next steps, schematic | `/stage-summarizer` |
-| `research/backlog.md` | parked ideas (`B-###`) with source, related decision, why parked, revisit-when | idea discovery + you |
-| `research/decisions.md` | decisions (`D-###`), append-only | you / agent during methodology work |
-| `research/hypotheses.md` | testable hypotheses (`H-###`) and their status | you / agent; `/result-to-claim` evidence |
-| `research/related_work_matrix.md` | papers × dimensions table + gaps | `/related-work-matrix` |
-| `research/log/YYYY-MM-DD.md` | what happened each day | agent during the session, `/stage-summarizer` |
-| `research-wiki/` | papers, ideas, experiments, claims + graph (ARIS) | ARIS skills via `research_wiki.py` |
-| `RESEARCH_BRIEF.md` | project direction; feeds the wiki query pack | you |
+- research/STATUS.md: last 3 sessions (did, files, results, decided, unfinished) + resume line. /stage-summarizer.
+- research/backlog.md: ledger of Decided (D-), Discarded (X-), Parked (B-). One row each, never deleted.
+- research/decisions.md: full rationale per D-id. research/hypotheses.md: H-ids + status.
+- research/log/YYYY-MM-DD.md: archive of every session entry.
+- research/related_work_matrix.md: papers × dimensions + gaps.
+- research-wiki/: ARIS knowledge base (papers, ideas, experiments, claims); edit via ARIS skills only.
+- RESEARCH_BRIEF.md: project direction (feeds query_pack).
 
 ## Project Constraints
 
-- {constraint 1}
+- {constraint}
 
 ## Non-Goals
 
-- {non-goal 1}
+- {non-goal}
 
 ## Compute Budget
 
-- {budget details}
+- {budget}

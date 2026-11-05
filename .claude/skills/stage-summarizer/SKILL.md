@@ -1,85 +1,61 @@
 ---
 name: stage-summarizer
-description: "End-of-session summarizer. Reads the research logs, decisions.md, hypotheses.md and backlog.md, rewrites research/STATUS.md (stage, current idea, decisions, open questions, next steps) and redraws a Mermaid schematic of the current idea. Use when the user says \"end session\", \"wrap up\", \"summarize the stage\", \"update status\", or at the end of every working session."
-argument-hint: "[optional: note to include, e.g. \"stage -> implementation\"]"
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git log:*), Bash(git status:*), Bash(git diff:*), Bash(date:*), Bash(ls:*)
+description: "End-of-session summarizer: adds this session to research/STATUS.md (keeps the last 3 sessions), archives it in research/log/, and records every decision, discard and parked idea in research/backlog.md. Use when the user says \"end session\", \"wrap up\", \"update status\", \"summarize the session\", or at the end of every working session."
+argument-hint: "[optional note, e.g. \"stage -> implementation\"]"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(date:*)
 ---
 
 # Stage Summarizer
 
-Extra note from the user (may be empty): $ARGUMENTS
+Note: $ARGUMENTS
 
-Goal: leave `research/STATUS.md` as an accurate, short, **sourced** snapshot so the next session can start by reading
-only `STATUS.md` + `research-wiki/query_pack.md`.
+Source of truth = this session's conversation + `git status --short` + `git diff --stat` (+ `git log --oneline` for commits made this session). Read research/STATUS.md and research/backlog.md. Don't read other files unless a fact needs checking.
 
-## Step 1 — Gather (read only what is listed)
+## 1. Session entry
 
-1. `research/STATUS.md` (current version; note its `Last updated` date = **D0**).
-2. All `research/log/*.md` files dated **on or after D0** (filename = date). If none, use the latest log file.
-3. `research/decisions.md` — only entries dated on or after D0, plus any decision still referenced in STATUS.
-4. `research/hypotheses.md` — every entry whose status is not `dropped` (title + status + evidence lines only).
-5. `research/backlog.md` — entries added on or after D0, and any entry whose "Revisit when" condition now looks met.
-6. The `## Pipeline Status` YAML block in `CLAUDE.md`.
-7. `git log --since=<D0> --oneline` and `git status --short` (if the folder is a git repo) to see what changed.
-8. `ls experiments/results/` — list results files modified since D0 (names only; open one only if a hypothesis status depends on it).
+Session number = highest S# in STATUS.md + 1. Exact facts only; no invention; numbers only if they're in a results file (cite it).
 
-Do **not** read the research wiki pages, the paper, or code unless a log entry is ambiguous and one file resolves it.
-
-## Step 2 — Write today's log
-
-Append (or create) `research/log/<today YYYY-MM-DD>.md` with a `## Session summary` section: 3–6 bullets of what was done
-this session, each with a pointer (file, D-/H-/B- id, results file). Include `$ARGUMENTS` if given.
-
-## Step 3 — Rewrite `research/STATUS.md`
-
-Keep exactly these sections, in this order, under ~150 lines total:
-
-```markdown
-# STATUS
-
-> (keep the existing 3-line header note)
-
-**Last updated:** <today> · **Stage:** <stage> (<sub-stage or one-word note>)
-
-## Current idea
-One paragraph (≤ 120 words): problem, approach, why it might work, current evidence. Cite H-/D- ids.
-
-## Schematic
-(mermaid flowchart — see Step 4)
-
-## Recent decisions
-- `D-###` one line (source). Keep the last ~5; older ones live in decisions.md.
-
-## Open questions
-- Concrete questions blocking progress. Mark ones for the advisor with **(advisor)**.
-
-## Next steps
-- [ ] Ordered, concrete, verifiable actions (≤ 7). Carry over unchecked items that still apply; drop done ones.
+```
+## S<n> · <YYYY-MM-DD> · <goal, ≤8 words>
+- Did: <what was done, concrete, ≤3 lines>
+- Files: <created/changed files, comma-separated>
+- Results: <metric = value (experiments/results/x.json)> or —
+- Decided/discarded: <D-/X-/B-/H- ids touched this session> or —
+- Unfinished: <exactly where work stopped, next concrete action> or —
 ```
 
-Rules:
-- **Never invent.** Every sentence must trace to a gathered source; cite it inline (`log/2026-11-05`, `D-003`, `H-002`,
-  `experiments/results/x.json`). If something is unknown, write it as an open question.
-- Stage is one of: `idle | idea-discovery | implementation | training | review | paper` (same vocabulary as CLAUDE.md).
-- Numbers: only copy a number if it appears in a results file; cite the file.
-- If a backlog item's "Revisit when" condition looks met, add an open question: "Revisit B-### ? (condition met: …)".
+## 2. research/STATUS.md
 
-## Step 4 — Mermaid schematic of the current idea
+Rewrite as:
+```
+# STATUS
+<!-- keep existing comment line -->
 
-Draw a `flowchart LR` (or `TD` if > 8 nodes) of the **current idea**, not of the repo:
-problem/gap → method components → what is measured → hypotheses being tested.
+**Resume:** <single next action, with file/command>
+**Stage:** <stage> · **Updated:** <today>
 
-- ≤ 12 nodes. Node ids are plain `[A-Za-z0-9_]`; every label in double quotes: `M1["Reward shaping via ..."]`.
-- Put hypothesis ids on edges or nodes they test: `M1 -->|H-002| E1`.
-- Style refuted/failed parts with `:::failed` and add `classDef failed stroke-dasharray: 5 5,opacity:0.6;`.
-- No parentheses, brackets or `"` inside labels (use `-` or `,`). No HTML.
-- If no idea is selected yet, keep a 3-node Problem → Method → Evaluation placeholder.
+<new entry>
+<previous 2 entries, unchanged>
+```
+Keep exactly the 3 newest sessions; drop older ones (they're already in log/). No other sections.
 
-## Step 5 — Sync CLAUDE.md
+## 3. research/log/<today>.md
 
-In the `## Pipeline Status` YAML block of `CLAUDE.md`, update **only** `stage`, `idea`, `next` (first unchecked next step)
-and `last_updated`. Do not touch other fields or any other part of CLAUDE.md.
+Append the same entry (create the file with `# <today>` if missing).
 
-## Step 6 — Report
+## 4. research/backlog.md
 
-Reply with: the new stage, the 3 most important next steps, and any backlog items to revisit. No full file dump.
+For each item from this session add one row (next free ID in that section; Source = S<n>):
+- Decision taken → Decided. If it has no full entry in research/decisions.md, append one.
+- Option/idea/approach rejected, hypothesis refuted, idea failed → Discarded, with the reason.
+- Idea deferred → Parked, with a checkable "Revisit when".
+- Parked item revived/dropped → move its row (note "from B-###").
+Update hypotheses.md status if a hypothesis changed.
+
+## 5. CLAUDE.md
+
+In the Pipeline Status YAML, update only `stage`, `idea`, `next` (= Resume line), `last_updated`.
+
+## 6. Reply
+
+3 lines max: session id, Resume line, new backlog ids.

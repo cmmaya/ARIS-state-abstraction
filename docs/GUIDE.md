@@ -64,16 +64,16 @@ claude mcp list   # must show codex ... ✔ Connected (restart Claude Code first
 CLAUDE.md                     always loaded; routes each task to the files it needs (+ ARIS block)
 RESEARCH_BRIEF.md             your project direction (feeds the wiki query pack, /idea-discovery)
 research/
-  STATUS.md                   current stage, idea, decisions, open questions, next steps, schematic
-  backlog.md                  parked ideas B-###
-  decisions.md                decisions D-### (append-only)
+  STATUS.md                   the last 3 sessions: what was done, files, results, unfinished + resume line
+  backlog.md                  ledger of everything Decided (D-), Discarded (X-), Parked (B-)
+  decisions.md                full rationale per D-id (append-only)
   hypotheses.md               hypotheses H-### and their status
   related_work_matrix.md      papers × dimensions table + gaps
   log/YYYY-MM-DD.md           daily log
   reports/weekly/             advisor reports (YYYY-Www.md)
 research-wiki/                ARIS knowledge base (papers, ideas, experiments, claims, graph)
 .claude/skills/
-  stage-summarizer/           custom: end-of-session STATUS update + Mermaid schematic
+  stage-summarizer/           custom: end-of-session STATUS + log + backlog update
   related-work-matrix/        custom: papers × dimensions matrix, gap, related-work hooks
   weekly-report/              custom: one-page advisor update
   <87 ARIS skills>            linked from ../Auto-claude-code-research-in-sleep (not committed)
@@ -94,9 +94,9 @@ Deliberately left out for now: the pinned devcontainer environment and rliable e
 
 | When | You type | What happens |
 |------|----------|--------------|
-| **Session start** | nothing special: just start `claude` and ask | CLAUDE.md tells the agent to read only `research/STATUS.md` + `research-wiki/query_pack.md` |
+| **Session start** | nothing special: just start `claude` and ask | CLAUDE.md tells the agent to read only `research/STATUS.md` (last 3 sessions) + `research-wiki/query_pack.md` |
 | **During work** | normal requests, ARIS slash commands | Routing rules in CLAUDE.md pick the files (see table below) |
-| **Session end** | `/stage-summarizer` | Writes today's log summary, rewrites STATUS.md + schematic, syncs CLAUDE.md `stage`/`next` |
+| **Session end** | `/stage-summarizer` | Adds the session to STATUS.md (drops the 4th-oldest), archives it in the log, records decisions/discards/parked ideas in backlog.md |
 | **Friday** | `/weekly-report` (or `/weekly-report — lang: es`) | One-page update in `research/reports/weekly/` |
 
 Routing, i.e. what the agent reads for each kind of task (defined in `CLAUDE.md`):
@@ -105,8 +105,9 @@ Routing, i.e. what the agent reads for each kind of task (defined in `CLAUDE.md`
 |------|--------------|
 | Question about prior work, ideas, results | `/research-wiki query "<topic>"` first → opens only pages the pack points to |
 | General concept unrelated to the project | answers directly, no wiki |
-| Methodology (design, metrics, baselines) | `decisions.md` + `hypotheses.md`; records new D-/H- entries |
-| Idea discovery | `backlog.md` first; appends unselected ideas to it afterwards |
+| "Was X decided/discarded?" | `backlog.md` |
+| Methodology (design, metrics, baselines) | `backlog.md` + `hypotheses.md`; `decisions.md` only for a D-id's rationale; records new D-/H- entries |
+| Idea discovery | `backlog.md` first (skips Discarded, and Parked not yet due); chosen → Decided, others → Parked/Discarded |
 | Related work | updates `related_work_matrix.md` (`/related-work-matrix`) |
 | Experiments | results JSON in `experiments/results/` → `python scripts/make_results_tex.py` |
 | Writing | latest results file + STATUS.md; numbers only via `\res…` macros |
@@ -115,45 +116,67 @@ Routing, i.e. what the agent reads for each kind of task (defined in `CLAUDE.md`
 
 ## 3. State files
 
-These are plain Markdown and you can edit them yourself at any time. The IDs (`D-`, `H-`, `B-`) link everything together:
-STATUS cites them, the weekly report cites them, backlog entries point to the decision that parked them.
+Plain Markdown, editable by hand. Two files carry the agent's memory, and each does one job:
 
-### STATUS.md: "where are we?"
-- **Read at every session start**, so keep it short (< 150 lines).
-- **Written by `/stage-summarizer`**, not by hand (you can, but the next summary rewrites it).
-- Sections: Current idea · Schematic (Mermaid) · Recent decisions · Open questions · Next steps.
-- Every line cites a source (`log/2026-11-05`, `D-003`, `H-002`, `experiments/results/x.json`), so nothing is invented.
-- The Mermaid block renders on GitHub and in VS Code (with the *Markdown Mermaid* extension).
+| File | Question it answers | Scope | Read |
+|------|---------------------|-------|------|
+| `STATUS.md` | "What exactly did we do in the last sessions, and where did we stop?" | last 3 sessions, rolling | every session start |
+| `backlog.md` | "What has been decided, discarded or parked, ever?" | whole project, never shrinks | idea discovery, methodology, "did we decide X?" |
 
-### backlog.md: "ideas we're not doing (yet)"
-Entry format:
+IDs link everything: `S#` sessions, `D-` decisions, `X-` discarded, `B-` parked, `H-` hypotheses.
+
+### STATUS.md: the last 3 sessions
 ```markdown
-### B-004 · Use curiosity bonus instead of count-based exploration
-- **Added:** 2026-11-12
-- **Source:** /idea-discovery 2026-11-12, IDEA_REPORT.md #3
-- **Related decision:** D-006 (chose count-based for interpretability)
-- **Why parked:** needs a learned dynamics model; too costly before the baseline works
-- **Revisit when:** H-002 is supported and we have > 50 GPU-h left
-- **Status:** parked
+**Resume:** run make_results_tex.py, then write Experiments §4.2 in paper/main.tex
+**Stage:** implementation · **Updated:** 2026-11-14
+
+## S7 · 2026-11-14 · Count bonus vs ε-greedy on maze
+- Did: ran 5 seeds each; fixed reward bug in envs/maze.py (bonus was added twice)
+- Files: envs/maze.py, experiments/results/count_bonus.json, experiments/results/egreedy.json
+- Results: success = 93.4% (count_bonus.json) vs 61.0% (egreedy.json)
+- Decided/discarded: D-004, X-003, H-001 → supported
+- Unfinished: results.tex not regenerated; Experiments section not written
+## S6 · …
+## S5 · …
 ```
-- Idea discovery **reads it first** and won't re-propose a parked idea unless its "revisit when" is met.
-- After you pick an idea, **all unselected candidates are appended** automatically (CLAUDE.md rule).
-- `/stage-summarizer` flags entries whose condition looks met ("Revisit B-004?").
-- Never delete; change `Status` to `revived (→ H-007)` or `dropped (reason)`.
+- Written by `/stage-summarizer` from the session itself (conversation + git diff), so it records **exactly** what was done.
+- Keeps only the 3 newest sessions. Older ones are not lost: every entry is also archived in `research/log/YYYY-MM-DD.md`.
+- The **Resume** line is the first thing the next session acts on.
+- No current-idea essays, no diagrams: decisions live in backlog.md, knowledge in the wiki.
 
-### decisions.md: "why did we do it this way?"
-Append-only ADR-style entries (`Context / Decision / Alternatives / Consequences / Links`). A changed decision gets a new
-entry with `Supersedes: D-###`. Write one whenever you choose a baseline, metric, environment, number of seeds, etc.
-Prompt: *"Record a decision: we evaluate on 10 seeds with IQM because…"*
+### backlog.md: the decided / discarded / parked ledger
+Three tables, one row per item, rows never deleted:
+```markdown
+## Decided
+| ID | Date | Decision | Why | Source |
+| D-004 | 2026-11-14 | Evaluate with 5 seeds, success rate as main metric | budget; matches prior work | S7 |
+## Discarded
+| ID | Date | What | Why | Source |
+| X-003 | 2026-11-12 | Curiosity (ICM) bonus | noisy-TV failure in our maze; needs dynamics model | S5, paper:pathak2017 |
+## Parked
+| ID | Date | Idea | Why parked | Revisit when | Source |
+| B-004 | 2026-11-12 | Counts over learned abstraction | needs H-001 first | H-001 supported | /idea-discovery S5 #3 |
+```
+- **Decided**: every decision. Its full rationale lives in `decisions.md` under the same D-id.
+- **Discarded**: rejected options, failed ideas, refuted hypotheses, each with the reason, so nobody retries them.
+- **Parked**: deferred ideas with a checkable "Revisit when". Revived → row moves to Decided; dropped → to Discarded (noted "from B-###").
+- Idea discovery reads it first; `/stage-summarizer` adds rows for everything decided/discarded/parked in the session.
+- Prompts: *"Was ICM ever considered?"* · *"Park this idea until we have the baseline."* · *"Discard the PPO variant: unstable over seeds."*
 
-### hypotheses.md: "what are we testing?"
-Each `H-###` states in advance what would support or refute it, and has a status
-(`open → testing → supported | refuted | inconclusive`). When `/result-to-claim` gives a verdict, update the status and link
-the results file. Prompt: *"Add a hypothesis: count-based bonuses improve success rate on sparse-reward mazes over ε-greedy."*
+### decisions.md: full rationale
+ADR-style entry per D-id (Context · Decision · Alternatives · Consequences · Links). Changed decision → new entry with `Supersedes: D-###`.
+The agent opens it only when it needs the *why* behind a D-id.
 
-### log/YYYY-MM-DD.md: "what happened today"
-Short bullets with pointers. The agent appends during the session; `/stage-summarizer` adds a "Session summary".
-STATUS and the weekly report are built from these.
+### hypotheses.md: what we're testing
+Each `H-###` says in advance what would support or refute it; status `open → testing → supported | refuted | inconclusive`.
+Refuted → also a Discarded row in backlog.md. *"Add a hypothesis: count-based bonuses beat ε-greedy on sparse-reward mazes."*
+
+### log/YYYY-MM-DD.md: archive
+Every session entry, forever. `/weekly-report` reads the week's entries from here.
+
+### Why the agent files are terse
+CLAUDE.md, the skills and the state files are written for the agent: short rules, one row per item, no figures or diagrams
+(they cost context and the agent doesn't use them). This guide is the human-readable version; the agent never loads it.
 
 ---
 
@@ -221,13 +244,14 @@ Tips:
 ### `/stage-summarizer` (end of every session)
 ```
 /stage-summarizer
-/stage-summarizer stage -> implementation; we chose the count-based idea
+/stage-summarizer stage -> implementation
 ```
-Reads the logs since the last update, new decisions, open hypotheses and new backlog items, then:
-1. appends a *Session summary* to today's log,
-2. rewrites `research/STATUS.md` (sourced, < 150 lines),
-3. redraws the Mermaid schematic of the **current idea** (problem → method parts → metrics, with H-ids on edges; failed parts dashed),
-4. syncs `stage`, `idea`, `next` in the CLAUDE.md Pipeline Status block.
+Uses this session's conversation + `git status`/`git diff` (not memory of older sessions), then:
+1. writes a session entry `S#` (did · files · results · decided/discarded · unfinished),
+2. puts it at the top of `research/STATUS.md`, drops the oldest so 3 remain, sets the **Resume** line,
+3. archives the entry in `research/log/<today>.md`,
+4. adds backlog rows for every decision (Decided + decisions.md entry), rejection (Discarded) and deferral (Parked),
+5. syncs `stage`, `idea`, `next` in the CLAUDE.md Pipeline Status block.
 
 ### `/related-work-matrix` (formulation stage, then whenever you add papers)
 ```
@@ -248,7 +272,7 @@ Paper facts come from the wiki pages; unknown cells are `?`, never guessed. Pape
 /weekly-report — since: 2026-11-01
 ```
 One page (≤ 400 words): TL;DR · Done (✅/❌ against last week's plan) · Results table (every number cites its JSON) ·
-Decisions · Questions for the advisor · Plan. Saved as `research/reports/weekly/2026-W45.md`.
+Decided/discarded · Questions for the advisor · Plan. Saved as `research/reports/weekly/2026-W45.md`.
 
 ---
 
@@ -312,7 +336,7 @@ ARIS writing skills work on `paper/`: `/paper-plan`, `/paper-write`, `/paper-com
 | Analyze | `/analyze-results`, `/result-to-claim` | updates wiki claims/ideas |
 | Review loop | `/auto-review-loop "scope"` | needs the Codex reviewer (section 0) |
 | Paper | `/paper-writing "NARRATIVE_REPORT.md"` or step by step `/paper-plan` → `/paper-write` → `/paper-compile` | |
-| Figures | `/paper-figure`, `/mermaid-diagram` | |
+| Paper figures | `/paper-figure` | for the paper only, not state files |
 | Everything | `/research-pipeline "direction"` | long-running, chains all of the above |
 
 Full list: type `/` in Claude Code, or see `..\Auto-claude-code-research-in-sleep\README.md`.
@@ -330,17 +354,17 @@ Full list: type `/` in Claude Code, or see `..\Auto-claude-code-research-in-slee
     → matrix with 15 rows; gap G3: "no method combines partial observability with count-based bonuses and >5 seeds"
 > /idea-discovery "exploration bonuses under partial observability for sparse-reward navigation"
     → reads backlog (empty) + query pack; proposes 6 ideas; you pick #2
-    → ideas #1,#3–#6 appended to backlog.md as B-001…B-005 with "revisit when" conditions
-> "Record the decision to pursue idea #2 and add its hypotheses."
-    → D-002 in decisions.md; H-001, H-002 in hypotheses.md
+    → #2 → Decided (D-002); #1,#4 → Parked (B-003, B-004, with revisit conditions); #3,#5,#6 → Discarded (X-003…X-005, with reasons)
+> "Add the hypotheses for idea #2."
+    → H-001, H-002 in hypotheses.md
 > /stage-summarizer stage -> implementation
-    → STATUS.md: current idea, schematic Problem → Count bonus over belief state → Success rate (H-001)
+    → STATUS.md gets S2: what was done, files, D-002/B-/X- ids, Resume: "write experiment plan for H-001"
 ```
 
 **Tuesday, start a new session**
 ```
 > "Where are we and what's next?"
-    → agent read STATUS.md + query_pack.md only; answers from them
+    → agent read STATUS.md (last sessions + Resume line) + query_pack.md only; answers from them
 > "Did any paper already try counts over belief states?"
     → /research-wiki query "count-based bonus belief state POMDP" → cites paper:… pages, opens two of them
 > /experiment-plan   then   /run-experiment

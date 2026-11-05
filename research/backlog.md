@@ -1,24 +1,22 @@
-# Backlog — parked ideas
+# BACKLOG
+<!-- Ledger of everything decided, discarded and parked. One row per item; never delete rows.
+Decided → full rationale in decisions.md (same D-id). Parked revived → move row to Decided, note "from B-###".
+Parked dropped → move to Discarded, note "from B-###". Refuted hypotheses and failed ideas go to Discarded.
+Source = session (S#), log date, /idea-discovery report, paper:<slug>, advisor. IDs sequential per section. -->
 
-> Ideas we are **not** working on now but don't want to lose.
-> - Idea discovery reads this file **before** generating ideas, and does not re-propose a parked idea unless its
->   "Revisit when" condition is met.
-> - After an idea is selected, every **unselected** candidate is appended here.
-> - Never delete entries. Change `Status` instead (`parked` → `revived (→ H-###)` or `dropped (reason)`).
-> - IDs are sequential: `B-001`, `B-002`, …
+## Decided
+| ID | Date | Decision | Why | Source |
+|----|------|----------|-----|--------|
+| D-001 | 2026-11-05 | Build repo on ARIS + research/ state files, custom skills, results macros, LaTeX CI | persistent memory across sessions; no typed numbers in paper | S1 |
 
-## Entry format
+## Discarded
+| ID | Date | What | Why | Source |
+|----|------|------|-----|--------|
+| X-001 | 2026-11-05 | Mermaid schematic in STATUS.md | figures cost agent context and aren't used by it | S1 |
+| X-002 | 2026-11-05 | STATUS.md as full project snapshot | replaced by last-3-sessions log + this ledger | S1 |
 
-```markdown
-### B-000 · <one-line idea title>
-- **Added:** YYYY-MM-DD
-- **Source:** where it came from (e.g. `/idea-discovery` 2026-11-05 IDEA_REPORT.md #3 · paper:smith2025 · advisor meeting)
-- **Related decision:** D-### that parked it (or "—")
-- **Why parked:** one or two sentences
-- **Revisit when:** a concrete, checkable condition (e.g. "baseline H-002 is supported", "after the workshop deadline", "if we get >100 GPU-h")
-- **Status:** parked
-```
-
-## Entries
-
-<!-- Append new entries below this line, newest last. -->
+## Parked
+| ID | Date | Idea | Why parked | Revisit when | Source |
+|----|------|------|------------|--------------|--------|
+| B-001 | 2026-11-05 | Pinned devcontainer/Docker environment | not needed before experiments | before the first experiment that goes in the paper | S1 |
+| B-002 | 2026-11-05 | rliable evaluation (IQM + bootstrap CIs over seeds) | no experiments yet | first multi-seed comparison | S1 |

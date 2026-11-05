@@ -1,34 +1,12 @@
 # STATUS
+<!-- Last 3 sessions only, newest first. Written by /stage-summarizer. Older sessions: research/log/. -->
 
-> Read at every session start. Rewritten by `/stage-summarizer` at session end. Keep under ~150 lines.
-> Every claim here cites its source: a log date (`log/2026-11-05`), a decision (`D-001`), a hypothesis (`H-001`),
-> a backlog item (`B-001`) or a results file (`experiments/results/<file>.json`).
+**Resume:** run setup (docs/GUIDE.md §0), then fill RESEARCH_BRIEF.md.
+**Stage:** idle · **Updated:** 2026-11-05
 
-**Last updated:** 2026-11-05 · **Stage:** idle (setup)
-
-## Current idea
-
-_No idea selected yet._ Finish setup (`docs/GUIDE.md` §0), fill in `RESEARCH_BRIEF.md`, then run `/idea-discovery "<direction>"`.
-
-## Schematic
-
-```mermaid
-flowchart LR
-  P["Problem: TBD"] --> M["Method: TBD"]
-  M --> E["Evaluation: TBD"]
-```
-
-## Recent decisions
-
-- `D-001` Repo set up on ARIS with state files, custom skills and the LaTeX workflow (log/2026-11-05).
-
-## Open questions
-
-- What is the research direction? (fill in `RESEARCH_BRIEF.md`)
-
-## Next steps
-
-- [ ] Finish setup: run the ARIS installer, python3 shim and wiki init (`docs/GUIDE.md` §0).
-- [ ] Fill in `RESEARCH_BRIEF.md` (problem, background, constraints).
-- [ ] Ingest 5–10 core papers into the wiki (`/research-lit "<topic>"` or `/research-wiki ingest`).
-- [ ] Build the first related-work matrix (`/related-work-matrix`).
+## S1 · 2026-11-05 · Repo setup
+- Did: cloned ARIS to ../Auto-claude-code-research-in-sleep; created state files, 3 custom skills, results→LaTeX script, LaTeX CI; pushed to github.com/cmmaya/ARIS-state-abstraction (CI green). Reworked STATUS.md to last-3-sessions and backlog.md to decided/discarded/parked ledger.
+- Files: CLAUDE.md, research/*, .claude/skills/{stage-summarizer,related-work-matrix,weekly-report}, scripts/make_results_tex.py, .github/workflows/latex.yml, docs/GUIDE.md
+- Results: —
+- Decided/discarded: D-001, X-001, X-002 (backlog.md)
+- Unfinished: ARIS skill install, python3 shim, `research-wiki` init (blocked by permissions; user runs them).

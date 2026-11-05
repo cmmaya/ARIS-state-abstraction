@@ -1,58 +1,36 @@
 ---
 name: weekly-report
-description: "Turns research/STATUS.md and the week's logs into a one-page update for the advisor, saved to research/reports/weekly/. Use on Fridays or when the user says \"weekly report\", \"update for my advisor\", \"informe semanal\", \"what did I do this week\"."
-argument-hint: "[optional: — lang: es | en, — since: YYYY-MM-DD]"
+description: "One-page advisor update from the week's session logs, backlog changes and results files, saved to research/reports/weekly/YYYY-Www.md. Use on Fridays or when the user says \"weekly report\", \"update for my advisor\", \"informe semanal\"."
+argument-hint: "[— lang: es|en] [— since: YYYY-MM-DD]"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git log:*), Bash(date:*), Bash(ls:*)
 ---
 
 # Weekly Report
 
-Options: $ARGUMENTS
-- `— lang: es` writes the report in Spanish (default: English).
-- `— since: YYYY-MM-DD` overrides the start date (default: 7 days before today).
+Options: $ARGUMENTS. Default: lang en, since = today − 7 days.
 
-## Step 1 — Gather
+## 1. Read
 
-1. `research/STATUS.md`.
-2. `research/log/*.md` with dates in [since, today].
-3. `research/decisions.md`, `research/hypotheses.md`, `research/backlog.md` — only entries added or changed in the window
-   (use dates in entries; `git log --since=<since> -p -- research/` if it's a git repo).
-4. `ls experiments/results/` — results files modified in the window. Open each one to copy its headline numbers.
-5. The previous report in `research/reports/weekly/` (if any) — to check what was promised last week.
+- research/log/*.md dated in [since, today] (session entries).
+- research/backlog.md rows dated in the window.
+- research/hypotheses.md entries whose status changed in the window.
+- experiments/results/*.json changed in the window (`git log --since=<since> --name-only -- experiments/results/`); copy headline numbers.
+- Previous report in research/reports/weekly/ (to mark last week's plan done/not done).
 
-## Step 2 — Write `research/reports/weekly/<YYYY>-W<ww>.md` (ISO week)
+## 2. Write research/reports/weekly/<YYYY>-W<ww>.md (ISO week), ≤400 words
 
-One page, **≤ 400 words**, this structure:
-
-```markdown
-# Weekly update — <Name/project> — week <ww> (<since> → <today>)
-
-**TL;DR**
-- (3 bullets max: the most important result, decision, and blocker)
-
-## Done this week
-- … (link D-/H- ids; mark items promised last week as ✅ or ❌)
-
-## Results
-| What | Value | Source |
-|------|-------|--------|
-| … | … | `experiments/results/<file>.json` |
-
-## Decisions
-- `D-###` … (one line each)
-
-## Blockers / questions for you
-- … (concrete, answerable questions)
-
-## Plan for next week
-- [ ] … (from STATUS.md next steps)
+```
+# Weekly update — week <ww> (<since> → <today>)
+TL;DR: ≤3 bullets (main result, main decision, main blocker)
+## Done        (✅/❌ against last week's plan)
+## Results     table: what | value | source JSON
+## Decided / discarded   (D-/X-/B- ids, one line each)
+## Questions for advisor
+## Next week
 ```
 
-Rules:
-- Every number must come from a results file and cite it. No numbers from memory or logs alone.
-- Plain language for the advisor; no internal tool names (`/skill`, wiki node ids) except D-/H- ids.
-- If the week had no progress, say so plainly and state why.
+Rules: every number from a results JSON, cited. Plain language; no skill names or wiki ids. No progress → say so and why.
 
-## Step 3 — Record and report
+## 3. Reply
 
-Append "Weekly report written: reports/weekly/<file>" to today's log. Reply with the TL;DR and the file path.
+TL;DR + file path. Append "Weekly report: reports/weekly/<file>" to today's log.
