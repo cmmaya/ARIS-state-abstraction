@@ -1,0 +1,11 @@
+{
+  "_meta": {
+    "notes": "EXAMPLE FILE with placeholder values to show the format. Delete it (and its use in paper/main.tex) once real results exist.",
+    "commit": "",
+    "seeds": [0, 1, 2]
+  },
+  "_format": {"success_rate": "pct1"},
+  "return": {"mean": 0.0, "std": 0.0},
+  "success_rate": 0.0,
+  "n_seeds": 3
+}

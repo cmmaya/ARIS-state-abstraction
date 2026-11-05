@@ -1,0 +1,92 @@
+# LaTeX pipeline: results-macro check, PDF build, chktex lint, latexdiff against the previous version.
+# PDFs are uploaded as build artifacts (Actions run page → Artifacts).
+name: latex
+
+on:
+  push:
+    paths: ["paper/**", "experiments/results/**", "scripts/make_results_tex.py", ".github/workflows/latex.yml"]
+  pull_request:
+    paths: ["paper/**", "experiments/results/**"]
+  workflow_dispatch:
+
+jobs:
+  results-macros:
+    name: results.tex is up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/make_results_tex.py --check
+      - name: Typed numbers in the paper (warning only)
+        run: python scripts/make_results_tex.py --lint-paper
+
+  build:
+    name: Build PDF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: paper
+          latexmk_use_lualatex: false
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paper-pdf
+          path: paper/main.pdf
+          if-no-files-found: error
+
+  chktex:
+    name: Lint (chktex)
+    runs-on: ubuntu-latest
+    container: texlive/texlive:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: chktex
+        run: |
+          set +e
+          # -n1 cmd terminated with space, -n8 dash length, -n24 space before \label
+          chktex -q -n1 -n8 -n24 -I0 paper/*.tex | tee chktex.log
+          n=$(grep -c "^Warning\|^Error" chktex.log || true)
+          echo "### chktex: $n issue(s)" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"; cat chktex.log >> "$GITHUB_STEP_SUMMARY"; echo '```' >> "$GITHUB_STEP_SUMMARY"
+          # Fail only on chktex errors; warnings are reported in the summary.
+          ! grep -q "^Error" chktex.log
+
+  latexdiff:
+    name: Diff PDF vs previous version
+    runs-on: ubuntu-latest
+    container: texlive/texlive:latest
+    continue-on-error: true
+    steps:
+      - name: Install git (needed for full history in the container)
+        run: apt-get update -qq && apt-get install -y -qq git
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Pick base commit
+        id: base
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          BASE="${{ github.event.pull_request.base.sha || github.event.before }}"
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            BASE=$(git rev-parse HEAD~1 2>/dev/null || true)
+          fi
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE:paper/main.tex" 2>/dev/null; then
+            echo "No previous paper/main.tex to diff against"; echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "sha=$BASE" >> "$GITHUB_OUTPUT"
+      - name: latexdiff
+        if: steps.base.outputs.skip != 'true'
+        run: |
+          git worktree add /tmp/old "${{ steps.base.outputs.sha }}"
+          latexdiff --flatten /tmp/old/paper/main.tex paper/main.tex > paper/diff.tex
+          cd paper && latexmk -pdf -f -interaction=nonstopmode diff.tex || true
+          test -f diff.pdf
+      - uses: actions/upload-artifact@v4
+        if: steps.base.outputs.skip != 'true'
+        with:
+          name: paper-diff-pdf
+          path: paper/diff.pdf

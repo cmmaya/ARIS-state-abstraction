@@ -1,0 +1,32 @@
+# --- ARIS (managed by install_aris.ps1; links point into ../Auto-claude-code-research-in-sleep) ---
+# Upstream skills are junctions: don't commit them. Our own skills ARE committed.
+.claude/skills/*
+!.claude/skills/stage-summarizer/
+!.claude/skills/related-work-matrix/
+!.claude/skills/weekly-report/
+.claude/agents/aris-fanout-leaf.md
+.claude/settings.local.json
+.aris/
+# Review traces contain full LLM prompts/responses
+.aris/traces/
+
+# --- LaTeX build output ---
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.toc
+paper/*.pdf
+paper/diff.tex
+
+# --- Python / misc ---
+__pycache__/
+*.pyc
+.venv/
+.env
+.DS_Store
+Thumbs.db
