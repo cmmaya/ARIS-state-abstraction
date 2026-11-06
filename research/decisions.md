@@ -83,3 +83,27 @@ Date · Context · Decision · Alternatives · Consequences · Links -->
   - Pooling and hold differ only if every chair is taken at the instant infusion ends. That never happened under FIFO, but it can under other policies or heavier load.
   - Reporting the deviation to the BPMN+OPT authors is optional and can go with the C-16 question.
 - Links: H-002, X-010, D-003, D-007; research/abstraction_rules.md R2; research/checklist.md C-15, C-28
+
+### D-010 · C-01 is stated on unbounded queues, with a corollary at K = 5
+- Date: 2026-11-06
+- Context: simpn's Fig. 2 has no queue cap (C-14). The state counts 324 / 144 / 18,468 / 503,424 all assume each queue is truncated at K = 5 (C-29).
+- Decision (user, 2026-11-06): the Level 1 exactness theorem (C-01) is stated on the unbounded-queue model, which has a countable state space, as simpn implements it. The 324-state count, and 144 for the paper's (n_P1, n_P2, I), are a corollary for the model truncated at K = 5 per queue.
+- Alternatives: state everything on the truncated model. That is simpler and finite, but it proves exactness for a model that blocks arrivals, which is not simpn's model.
+- Consequences:
+  - Truncation stays an R7 approximation (Level 2) and is not part of Level 1.
+  - Value iteration and H-001 run on the truncated model, so they must report K.
+  - The RQ1 state-count JSONs (C-20) record K.
+- Links: C-01, C-20, C-29, R7, H-001, D-003
+
+### D-011 · Level 1 proofs use generic exponential rates
+- Date: 2026-11-06
+- Context: the 324-state Level 1 model needs exponential durations, while simpn's Fig. 2 uses uniform ones.
+- Decision (user, 2026-11-06): proofs use symbolic parameters: arrival rate λ > 0, P(P1) = p ∈ (0,1), and service rates μ(o, type) > 0 depending only on (oncologist, patient type). The numeric instance for experiments matches the uniform means:
+  - φ₁ × P1 = 3, φ₁ × P2 = 4;
+  - φ₂ × P1 = 5, φ₂ × P2 = 6;
+  - arrivals mean 10, p = 0.5.
+- Alternatives: prove only for the numeric instance. That is no simpler and less general.
+- Consequences:
+  - The theorem claims exactness, not minimality. For degenerate rates, e.g. μ(φ₁, ·) = μ(φ₂, ·), the oncologists become exchangeable and could be merged further; the proof names this case.
+  - Experiments (H-001, C-20, C-22) use the numeric instance.
+- Links: C-01, D-003, D-004, H-001; research/abstraction_rules.md "Model parameters"
