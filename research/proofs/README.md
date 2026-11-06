@@ -27,6 +27,7 @@ research/proofs/
 
 ## Workflow
 
+0. Gather: read the C-id's item in research/checklist.md, every D-/H-id it links (research/decisions.md, research/hypotheses.md) and every rule it names (research/abstraction_rules.md). These are the proof's assumptions and definitions. Name those files in the /proof-writer prompt, because it reads only the files it is given.
 1. Draft: `/proof-writer` with the target `research/proofs/<C-id>_<slug>/main.tex`. Without a target it writes `PROOF_PACKAGE.md` in the repo root, so always pass the target.
 2. Check: run `/proof-checker` on that folder. Its audit files land next to `main.tex`.
 3. When the acceptance gate passes, set `Status: checked` in the header. Then tick the C-id in research/checklist.md with `evidence: research/proofs/<folder>/main.tex + PROOF_AUDIT.md`, and update the linked wiki claim status.
