@@ -68,7 +68,7 @@ last_updated: "2026-11-06"
 - Not yet stated. Current work is tabular/theory on small fragments (Fig. 2 exact: 324 states).
 <!-- ARIS:BEGIN -->
 ## ARIS Skill Scope
-ARIS skills installed in this project: 82 entries.
+ARIS skills installed in this project: 71 entries.
 Manifest: `.aris/installed-skills.txt`
 ARIS repo root: `C:\Users\Camilo\Documents\Trabajo\Master projects\Auto-claude-code-research-in-sleep`
 Project skill path: `.claude/skills/<skill-name>`
