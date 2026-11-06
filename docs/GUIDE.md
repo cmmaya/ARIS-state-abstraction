@@ -81,6 +81,7 @@ research-wiki/                ARIS knowledge base (papers, ideas, experiments, c
   weekly-report/              custom: one-page advisor update
   help-aris/                  custom: how to use any skill here, which skill for a goal, how to make a new one
   <87 ARIS skills>            linked from ../Auto-claude-code-research-in-sleep (not committed)
+literature/                   your reference PDFs/docs (not committed; only its README is)
 experiments/results/          one JSON per experiment → LaTeX macros
 paper/
   main.tex, references.bib
@@ -228,6 +229,7 @@ names. That rule lives in CLAUDE.md, so it applies to every session.
 | Force a fresh knowledge pack on a topic | `/research-wiki query "reward shaping in sparse-reward navigation"` | Rebuilds `query_pack.md` and summarizes it |
 | Add one paper | `/research-wiki ingest "Never Give Up" — arxiv: 2002.06038` | Creates `papers/<slug>.md` with metadata + abstract |
 | Add many papers | `/research-wiki sync — arxiv-ids 2002.06038,1810.12894` | Batch ingest |
+| Add your own PDF | put it in `literature/`, then *"I added literature/li2006.pdf, ingest it"* | Agent reads it, ingests (arXiv id/DOI if printed), enriches the page from the PDF, replies with the `paper:` id. Dropping the file alone does **not** update the wiki |
 | Search + ingest at once | `/research-lit "count-based exploration deep RL"` | Literature review, ingests papers it finds |
 | Mark a paper as core | `/research-wiki update paper:<slug> — relevance: core` (slug = page filename) | Updates the page, rebuilds the pack |
 | Record an idea outcome | `/research-wiki update idea:003 — outcome: negative` | Failed ideas stay in the pack forever |

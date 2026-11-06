@@ -23,6 +23,7 @@ last_updated: ""
 - Session end: run /stage-summarizer.
 - Prior work, ideas, results ("did we try X?", "which paper…"): /research-wiki query "<topic>" first; open wiki pages only if the pack names them. Never read the whole wiki.
 - "Was X decided / discarded / parked?": read research/backlog.md.
+- New file(s) in literature/ ("I added/sent a paper", "ingest the new files"): for each PDF not yet in research-wiki/index.md, read its first pages, get title/authors/year/venue (and arXiv id or DOI if printed), run `python3 .aris/tools/research_wiki.py ingest_paper research-wiki/ …` with them (prefer --arxiv-id), then /wiki-enrich the new page(s) from the PDF. Non-paper documents: ingest only if the user asks; otherwise just read them for the task. Reply with the new paper:<slug> ids.
 - General concepts unrelated to the project: answer directly; no wiki, no state files.
 - Methodology (design, metrics, baselines, seeds): read research/backlog.md, research/hypotheses.md; open research/decisions.md only for a D-id's rationale. New decision → D-### row in backlog.md "Decided" + full entry in decisions.md. New hypothesis → H-### in hypotheses.md.
 - Idea discovery: read backlog.md first; don't re-propose Discarded items, or Parked items whose "Revisit when" isn't met. After selection: chosen → Decided; unselected → Parked (with revisit condition) or Discarded (with reason).
@@ -42,6 +43,7 @@ last_updated: ""
 - research/related_work_matrix.md: papers × dimensions + gaps.
 - research-wiki/: ARIS knowledge base (papers, ideas, experiments, claims); edit via ARIS skills only.
 - RESEARCH_BRIEF.md: project direction (feeds query_pack).
+- literature/: user's reference PDFs/docs (not in git). Read only the file a task names.
 
 ## Project Constraints
 

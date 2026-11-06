@@ -28,6 +28,8 @@ Details for any command: `/help-aris <skill>`. Full manual: [GUIDE.md](GUIDE.md)
 | `/wiki-enrich` | fills the empty sections of papers ingested as stubs |
 | `/related-work-matrix` | papers × (formulation, state space, reward, evaluation) table, **gaps** with G-ids, related-work hooks |
 | `/alphaxiv <arxiv id>` | quick summary of one paper |
+| drop PDFs in `literature/`, then *"I added literature/<file>, ingest it"* | wiki page per paper, enriched from the PDF (dropping alone doesn't update the wiki) |
+| `/research-lit "<topic>" — sources: local` | review of only your PDFs in `literature/` |
 
 Ask in plain words afterwards: *"Which papers learn abstractions with bisimulation metrics?"* → the agent queries the wiki, not the web.
 

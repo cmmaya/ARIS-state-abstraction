@@ -11,6 +11,10 @@
 # Review traces contain full LLM prompts/responses
 .aris/traces/
 
+# --- Reference library (PDFs/docs stay local; only the README is tracked) ---
+literature/*
+!literature/README.md
+
 # --- LaTeX build output ---
 paper/*.aux
 paper/*.bbl
