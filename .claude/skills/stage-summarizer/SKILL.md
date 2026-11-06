@@ -9,7 +9,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git status:*), Bash(git diff:
 
 Note: $ARGUMENTS
 
-Source of truth = this session's conversation + `git status --short` + `git diff --stat` (+ `git log --oneline` for commits made this session). Read research/STATUS.md and research/backlog.md. Don't read other files unless a fact needs checking.
+Source of truth = this session's conversation + `git status --short` + `git diff --stat` (+ `git log --oneline` for commits made this session). Read research/STATUS.md, research/backlog.md and research/checklist.md. Don't read other files unless a fact needs checking.
 
 ## 1. Session entry
 
@@ -52,10 +52,14 @@ For each item from this session add one row (next free ID in that section; Sourc
 - Parked item revived/dropped → move its row (note "from B-###").
 Update hypotheses.md status if a hypothesis changed.
 
-## 5. CLAUDE.md
+## 5. research/checklist.md
+
+Tick `[x]` every C-## item finished this session, appending `(S<n>, <date>, evidence: file/results/D-id)`. Add a new C-## item (next free ID, right section, with "Done when") for every new open check, proof, computation or pending decision. Never delete items. The STATUS `Unfinished` line names the C-ids it refers to.
+
+## 6. CLAUDE.md
 
 In the Pipeline Status YAML, update only `stage`, `idea`, `next` (= Resume line), `last_updated`.
 
-## 6. Reply
+## 7. Reply
 
-3 lines max: session id, Resume line, new backlog ids.
+3 lines max: session id, Resume line, new backlog and checklist ids.

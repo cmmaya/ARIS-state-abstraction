@@ -1,0 +1,17 @@
+{"from": "idea:language_derived_abstraction_levels", "to": "paper:dijkman2026_bpmnopt_conceptual_modeling", "type": "inspired_by", "evidence": "idea language_derived_abstraction_levels inspired by paper", "added": "2026-11-06T16:35:49Z"}
+{"from": "idea:language_derived_abstraction_levels", "to": "paper:li2006_towards_unified_theory", "type": "inspired_by", "evidence": "idea language_derived_abstraction_levels inspired by paper", "added": "2026-11-06T16:35:49Z"}
+{"from": "idea:language_derived_abstraction_levels", "to": "paper:abel2016_near_optimal_behavior", "type": "inspired_by", "evidence": "idea language_derived_abstraction_levels inspired by paper", "added": "2026-11-06T16:35:49Z"}
+{"from": "idea:language_derived_abstraction_levels", "to": "gap:G1", "type": "addresses_gap", "evidence": "idea language_derived_abstraction_levels addresses gap", "added": "2026-11-06T16:35:49Z"}
+{"from": "idea:language_derived_abstraction_levels", "to": "gap:G2", "type": "addresses_gap", "evidence": "idea language_derived_abstraction_levels addresses gap", "added": "2026-11-06T16:35:49Z"}
+{"from": "idea:language_derived_abstraction_levels", "to": "gap:G3", "type": "addresses_gap", "evidence": "idea language_derived_abstraction_levels addresses gap", "added": "2026-11-06T16:35:49Z"}
+{"from": "claim:paper_abstraction_not_exact", "to": "gap:G1", "type": "addresses_gap", "evidence": "claim paper_abstraction_not_exact addresses gap", "added": "2026-11-06T16:35:50Z"}
+{"from": "claim:paper_abstraction_not_exact", "to": "paper:dijkman2026_bpmnopt_conceptual_modeling", "type": "uses", "evidence": "claim paper_abstraction_not_exact uses paper", "added": "2026-11-06T16:35:50Z"}
+{"from": "claim:paper_abstraction_not_exact", "to": "paper:li2006_towards_unified_theory", "type": "uses", "evidence": "claim paper_abstraction_not_exact uses paper", "added": "2026-11-06T16:35:50Z"}
+{"from": "claim:abel_lemma2_vacuous_time_bins", "to": "gap:G3", "type": "addresses_gap", "evidence": "claim abel_lemma2_vacuous_time_bins addresses gap", "added": "2026-11-06T16:35:50Z"}
+{"from": "claim:abel_lemma2_vacuous_time_bins", "to": "paper:abel2016_near_optimal_behavior", "type": "uses", "evidence": "claim abel_lemma2_vacuous_time_bins uses paper", "added": "2026-11-06T16:35:50Z"}
+{"from": "claim:abel_lemma2_vacuous_time_bins", "to": "paper:dijkman2026_bpmnopt_conceptual_modeling", "type": "uses", "evidence": "claim abel_lemma2_vacuous_time_bins uses paper", "added": "2026-11-06T16:35:50Z"}
+{"from": "claim:level1_horizon_independent", "to": "gap:G1", "type": "addresses_gap", "evidence": "claim level1_horizon_independent addresses gap", "added": "2026-11-06T16:35:51Z"}
+{"from": "claim:level1_horizon_independent", "to": "paper:li2006_towards_unified_theory", "type": "uses", "evidence": "claim level1_horizon_independent uses paper", "added": "2026-11-06T16:35:51Z"}
+{"from": "claim:level1_horizon_independent", "to": "paper:abel2016_near_optimal_behavior", "type": "uses", "evidence": "claim level1_horizon_independent uses paper", "added": "2026-11-06T16:35:51Z"}
+{"from": "paper:subramanian2022_approximate_information_state", "to": "gap:G2", "type": "addresses_gap", "evidence": "finite-horizon AIS bound; candidate for the time-horizon extension (B-003)", "added": "2026-11-06T16:35:51Z"}
+{"from": "paper:buchholz2017_bounded_aggregation_continuous", "to": "idea:language_derived_abstraction_levels", "type": "inspired_by", "evidence": "CTMDP aggregation with phase-type sojourns; relevant to the safe route", "added": "2026-11-06T16:35:52Z"}
