@@ -29,6 +29,7 @@ last_updated: "2026-11-06"
 - Methodology (design, metrics, baselines, seeds): read research/backlog.md, research/hypotheses.md; open research/decisions.md only for a D-id's rationale. New decision → D-### row in backlog.md "Decided" + full entry in decisions.md. New hypothesis → H-### in hypotheses.md.
 - Idea discovery: read backlog.md first; don't re-propose Discarded items, or Parked items whose "Revisit when" isn't met. After selection: chosen → Decided; unselected → Parked (with revisit condition) or Discarded (with reason).
 - Related work: /related-work-matrix → research/related_work_matrix.md.
+- Proofs and formal statements (C-ids that need a proof): one folder `research/proofs/<C-id>_<slug>/` with `main.tex` (format: research/proofs/README.md). /proof-writer with that target, then /proof-checker on the folder. Checked → tick the C-id with the folder as evidence.
 - Experiments: write one JSON per run to experiments/results/ (format: experiments/results/README.md), then `python scripts/make_results_tex.py`.
 - Writing paper/*.tex: read the relevant results JSON and STATUS.md. Numbers only via \res… macros from paper/results.tex; check with `python scripts/make_results_tex.py --lint-paper`.
 - Friday / "weekly report": /weekly-report.
@@ -43,6 +44,7 @@ last_updated: "2026-11-06"
 - research/log/YYYY-MM-DD.md: archive of every session entry.
 - research/related_work_matrix.md: papers × dimensions + gaps.
 - research/checklist.md: the to-do list. Every open check, proof, computation and pending decision (C-##), grouped by phase, with done-when criteria.
+- research/proofs/: one folder per proof item (C-id), main.tex + /proof-checker audit files.
 - research/abstraction_rules.md: rule catalog R1–R7, R3b (level, route, ε, checks on Figs. 1–2). Add new rules in its template.
 - research-wiki/: ARIS knowledge base (papers, ideas, experiments, claims); edit via ARIS skills only.
 - RESEARCH_BRIEF.md: project direction (feeds query_pack).

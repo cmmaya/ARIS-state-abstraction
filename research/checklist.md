@@ -1,7 +1,11 @@
 # CHECKLIST
 <!-- Everything left to check, prove, compute or decide. One item per check; never delete — tick [x] with date + evidence.
 IDs C-## are stable. Link H-/D-/B-/RQ ids and research/abstraction_rules.md rules. Updated by /stage-summarizer.
-Order within a section = suggested order. "Blocks" = items that cannot finish before this one. -->
+Order within a section = suggested order. "Blocks" = items that cannot finish before this one.
+Where evidence lives: proofs → research/proofs/<C-id>_<slug>/ (main.tex + PROOF_AUDIT.md); numbers → experiments/results/*.json;
+decisions → D-id in backlog.md; hypotheses → hypotheses.md; parameters and ε formulas → abstraction_rules.md. -->
+
+Proof items (folder research/proofs/<C-id>_<slug>/): C-01–C-06, C-10, C-11, C-13, C-24, C-25.
 
 Verified arithmetic on 2026-11-06, for reference. With φ₁: P1 ~ U(2,4), P2 ~ U(3,5) and φ₂: U(4,6), U(5,7) (inferred from Erlang k = 27, 48, 75, 108 = mean²/var):
 - Exact exponential Level 1: 36 × 3 × 3 = 324.
