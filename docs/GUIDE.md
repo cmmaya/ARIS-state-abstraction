@@ -45,14 +45,20 @@ python ..\Auto-claude-code-research-in-sleep\tools\research_wiki.py init researc
 
 Check: start `claude` in this folder and type `/` — you should see `/research-wiki`, `/idea-discovery`, `/stage-summarizer`, etc.
 
-**Optional, needed for the review-loop skills** (`/auto-review-loop`, `/research-review`, `/kill-argument`…): ARIS uses a second
-model as reviewer through the Codex CLI. One-time setup (needs a ChatGPT account):
+**Reviewer for the ✱ skills** (`/novelty-check`, `/research-review`, `/auto-review-loop`, `/proof-checker`…): ARIS uses a second
+model (GPT via your ChatGPT account) as reviewer through the Codex CLI. **Done on 2026-11-05** (codex-cli 0.167.0, test call OK).
+To redo it on another machine:
 
 ```powershell
-npm install -g @openai/codex; codex login
-claude mcp add codex -s user -- python "C:\Users\Camilo\Documents\Trabajo\Master projects\Auto-claude-code-research-in-sleep\mcp-servers\codex-exec\server.py"
-claude mcp list   # must show codex ... ✔ Connected (restart Claude Code first)
+npm install -g @openai/codex
+codex login                     # "Sign in with ChatGPT", finish in the browser
+# Windows: use the full python.exe path (python3 is a Store stub outside Git Bash) and point CODEX_BIN at the native
+# codex.exe (the bridge can't launch npm's codex.cmd wrapper)
+claude mcp add codex -s user -e "CODEX_BIN=C:\Users\Camilo\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\bin\codex.exe" -- "C:\Users\Camilo\AppData\Local\Programs\Python\Python312\python.exe" "C:\Users\Camilo\Documents\Trabajo\Master projects\Auto-claude-code-research-in-sleep\mcp-servers\codex-exec\server.py"
+claude mcp list                 # must show codex ... √ Connected; restart Claude Code
 ```
+After `npm update -g @openai/codex` the `codex.exe` path stays the same. Reviews use your ChatGPT plan's usage limits;
+`ultra`-effort audits can take 30+ minutes.
 
 **For the LaTeX preview**: install [MiKTeX](https://miktex.org/download) (or TeX Live) and the VS Code extension
 *LaTeX Workshop* (VS Code suggests it when you open the folder, via `.vscode/extensions.json`).

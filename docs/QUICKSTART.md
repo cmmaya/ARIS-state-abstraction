@@ -4,8 +4,7 @@ For the current phase: validate initial ideas → sort future work → fix the m
 Details for any command: `/help-aris <skill>`. Full manual: [GUIDE.md](GUIDE.md).
 
 > **✱ = needs a reviewer model.** These skills send your idea/proof to a second model for criticism.
-> Default is Codex (one-time setup in GUIDE §0). Until it's set up, run them with another backend you have,
-> e.g. `— reviewer: claude` (needs the claude-review MCP), or ask `/help-aris <skill>` what your options are.
+> Reviewer = Codex with your ChatGPT account: **set up and working** (GUIDE §0). Reviews count against your ChatGPT usage.
 
 ---
 
