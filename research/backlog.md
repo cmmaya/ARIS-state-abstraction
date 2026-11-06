@@ -15,6 +15,7 @@ Source = session (S#), log date, /idea-discovery report, paper:<slug>, advisor. 
 | D-006 | 2026-11-06 | Novelty claim narrowed to annotation-derived abstractions/bounds and the random time horizon N_H | SMDP discounting and discrete-step finite-horizon bounds already exist (X-006, X-007) | S2 (notes 2026-11-05: proposal 2026-10-24 + validation) |
 | D-007 | 2026-11-06 | Discounted bounds certify a proxy; evaluate every abstraction on the undiscounted H = 200 flow-time objective in simpn | the paper's objective is γ = 1, H = 200; Level 1 unaffected because exact | S2 (notes 2026-11-05: proposal 2026-10-24 + validation) |
 | D-008 | 2026-11-06 | RQ2's discretization axis follows the Level 2 route: safe route → vary δ (R6) and K (R7) against the Abel bound; rigorous route → vary Δ (R5) and K against the AIS bound. Only the safe route is active now (D-004) | Δ only exists in the rigorous route, and Abel + Δ is vacuous (X-004), so each route needs its own axis and bound | S2 (user, turn 3) |
+| D-009 | 2026-11-06 | Fig. 1 chair semantics = simpn as implemented: chairs pooled, released at infusion end, Observation takes any idle chair | evaluation runs in simpn (D-007); under pooling R2's idle-chair count is exact; FIFO trace shows no waits, so in practice it behaves like hold (0/2,095 waits) | S3 (user; experiments/results/c15_chair_trace_fig1.json) |
 
 ## Discarded
 | ID | Date | What | Why | Source |
@@ -28,6 +29,7 @@ Source = session (S#), log date, /idea-discovery report, paper:<slug>, advisor. 
 | X-007 | 2026-11-06 | SMDP effective discount E[e^(−βτ)] as a contribution | known corollary (Schweitzer 1971; Puterman Ch. 11); Abel et al. 2020 already cover semi-Markov options | S2 (notes 2026-11-05: proposal 2026-10-24 + validation) |
 | X-008 | 2026-11-06 | Rules R3/R5 acting on residual event times | residual times are latent in BPMN+OPT (Def. 2); rules use elapsed time | S2 (notes 2026-11-05: proposal 2026-10-24 + validation) |
 | X-009 | 2026-11-06 | AIS bounds for Level 3 | AIS bounds model-based abstractions; Level 3 is value-based | S2 (notes 2026-11-05: proposal 2026-10-24 + validation) |
+| X-010 | 2026-11-06 | H-002: chairs held from infusion to observation in simpn | refuted: BPMNTask returns the chair at infusion end and Observation takes any idle chair (guard not implemented); 0/2,095 patients observed in their infusion chair. Idle count still exact for simpn (pooled chairs); ground truth → C-28 | S3 (experiments/results/c15_chair_trace_fig1.json) |
 
 ## Parked
 | ID | Date | Idea | Why parked | Revisit when | Source |

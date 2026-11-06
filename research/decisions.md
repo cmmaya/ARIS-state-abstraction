@@ -69,3 +69,17 @@ Date · Context · Decision · Alternatives · Consequences · Links -->
 - Alternatives: a single Δ axis on every route (Δ is undefined on the safe route); a Δ axis used only to show Abel's vacuity (still possible as a side remark, not the RQ2 result).
 - Consequences: C-21 now waits on C-07 (zero-length epochs), C-08 and C-09 (ε for R7) for the safe-route grid. The rigorous-route grid waits on the AIS audit. RESEARCH_BRIEF.md RQ2 updated.
 - Links: D-004, X-004, B-003, H-003; research/checklist.md C-21
+
+### D-009 · Fig. 1 chair semantics follow simpn (pooled chairs)
+- Date: 2026-11-06
+- Context: the paper's Fig. 1 binds a patient's chair from infusion to observation (guard `chair == patient.chair`). simpn bpmnopt @8776bf0 does not implement this guard. BPMNTask returns the chair to `idle_chair` at infusion end (`simpn/prototypes.py:412`). Observation has no `resource_constraint`, so it takes any idle chair, and `bind_chair` writes a `chair_id` that nothing reads. FIFO trace: 0/2,095 patients observed in their infusion chair, 0 waits, 0 chairs taken in between (C-15, X-010).
+- Decision (user, 2026-11-06): Fig. 1 is modelled and evaluated with simpn's pooled-chair semantics as implemented. simpn is not patched.
+- Alternatives:
+  - paper guard + hold: the idle count is exact, but the simpn builder would need a change so the chair stays busy through observation;
+  - paper guard + release: R2 needs reserved-chair counts. The builder supports the guard, but infusion assignment ignores reservations.
+- Consequences:
+  - R2 on Fig. 1 is a plain idle-chair count with zero loss, so no reserved-chair state is needed.
+  - Results on Fig. 1 are for simpn's model, so the paper must state that this deviates from the paper's Fig. 1 guard.
+  - Pooling and hold differ only if every chair is taken at the instant infusion ends. That never happened under FIFO, but it can under other policies or heavier load.
+  - Reporting the deviation to the BPMN+OPT authors is optional and can go with the C-16 question.
+- Links: H-002, X-010, D-003, D-007; research/abstraction_rules.md R2; research/checklist.md C-15, C-28

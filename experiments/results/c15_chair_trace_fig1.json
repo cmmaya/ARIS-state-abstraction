@@ -1,0 +1,59 @@
+{
+  "_meta": {
+    "date": "2026-11-06",
+    "simpn_commit": "8776bf0",
+    "simpn_branch": "bpmnopt",
+    "model": "er_paper/models/fig1_problem.json",
+    "policy": "FIFO (solvers.FIFOPolicy)",
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "checklist": "C-15",
+    "hypothesis": "H-002",
+    "examples": [
+      "ep0 patient 1: infusion ch1 -> observation ch2 at t=65.82",
+      "ep0 patient 3: infusion ch10 -> observation ch3 at t=69.25",
+      "ep0 patient 2: infusion ch11 -> observation ch4 at t=75.19"
+    ],
+    "notes": "Chair semantics trace. Code: BPMNTask complete event returns the chair to idle_chair; Observation has no resource_constraint, so it takes any idle chair."
+  },
+  "_format": {
+    "same_chair_rate": "pct1"
+  },
+  "patients": 2095,
+  "same_chair": 0,
+  "other_chair": 2095,
+  "waited_for_chair": 0,
+  "chair_taken_by_other": 0,
+  "same_chair_rate": 0.0,
+  "n_episodes": 30
+}

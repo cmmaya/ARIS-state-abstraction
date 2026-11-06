@@ -22,6 +22,20 @@ Source: literature/notes_2026-11-05_state_abstraction_context.pdf. -->
 - Open questions: <...>
 ```
 
+## Model parameters (simpn bpmnopt @8776bf0, er_paper/models/)
+Fig. 2 (`fig2_problem.json`, `final_model_fig2.md`; C-14, checked 2026-11-06):
+- Arrivals: exp with mean 10 (`expovariate(1/10)`), one Patient per arrival, type = `random.choice({P1, P2})`, so P(P1) = P(P2) = 0.5.
+- Resources: φ₁ (`phi1`), φ₂ (`phi2`). Examination ptime: φ₁ × P1 = U(2,4), φ₁ × P2 = U(3,5), φ₂ × P1 = U(4,6), φ₂ × P2 = U(5,7). This confirms the inferred φ₂ values.
+- Lifecycle: patient and oncologist are both busy during ptime, then the oncologist returns to `idle_oncologist`. Examination has no behavior.
+- Decisions: sequential, one (patient, oncologist) pair per epoch. Mom = an unassigned waiting patient and an unassigned idle oncologist both exist. Con = at most one per patient and per oncologist. Same-time epochs return reward 0 (`smdp_env.step`, `same_time=True`), so zero-length epochs exist in the simulator (C-07).
+- No queue cap in the model. K = 5 in our state counts is our truncation (R7), not a model feature (C-29).
+- Routing and tie-breaking are not in the model; they live in the policies. FIFO picks the longest-waiting patient, ties broken by the lower resource id (`solvers.assign_fifo`). SPT picks the pair with the shortest expected ptime.
+- Objective: minimize total cycle time over H = 200 with discount 1.0. The env pays `n_in_system × dt` per step.
+- Env abstraction level 0 = (type counts, number of idle oncologists) = the paper's s̃ (n_P1, n_P2, I). Level 1 = type counts plus idle oncologist ids.
+- simpn's own `code/output/fig2_results.md` (100 eval episodes, avg cycle time): FIFO 82.88, SPT 82.73, Random 94.55, Q-learning 85.47, VI 85.48. These differ from the paper's Table 1 values used as targets in C-22.
+
+Fig. 1 (`fig1_problem.json`): interarrival exp(mean 6). 2 lab staff (senior U(2,8), junior U(10,20)), 2 oncologists U(5,15), 6 pharmacists U(20,40), 20 chairs. Standard infusion U(25,35), intensive U(70,110), observation U(30,40), uncontrolled. Scheduling offsets {0, 5, 10, 15, 20}. Chair semantics: see R2.
+
 ## Level 1: exact (φ_model)
 Level-wide findings: zero loss, and the optimal policy and tabular Q-learning convergence are preserved (Li et al. 2006). Abel et al. (2016) bounds are exactly 0 at ε = 0. Horizon-independent (exact bisimulation), so γ = 1, H = 200 is covered — Corroborated. SMDP exactness needs the joint law of (next abstract state, τ, reward) preserved; R1–R4 do this — Corroborated.
 
@@ -35,13 +49,17 @@ Level-wide findings: zero loss, and the optimal policy and tabular Q-learning co
 - Open questions: is ignoring `measurements` in routing intended, or is a constraint missing? Confirm with the BPMN+OPT authors. R1 doubles as a model-validation check.
 
 ### R2: exchangeability
-- Level: 1 · Route: both · Status: Validated (chairs: Check)
+- Level: 1 · Route: both · Status: Validated (chairs: pooled, D-009)
 - Syntactic precondition: cases with identical relevant attributes; resources of the same type with identical cond and ptime.
 - Abstraction φ: replace the objects by counts.
 - Parameters: none · ε_R: 0 · ε_T: 0 · Guarantee: zero loss
 - Check on Fig. 2: oncologists φ₁ and φ₂ differ in ptime, so they are not counted. The exact state needs each oncologist's status in {idle, P1, P2}: 324 states (queue cap 5). The paper's (n_P1, n_P2, I) has 144 states and is not exact even with exponential durations (Corrected).
-- Check on Fig. 1: 20 chairs become an idle count only if the chair is held from infusion to observation (guard `chair == patient.chair`). If released, R2 needs a count of reserved chairs.
-- Open questions: verify chair release semantics in simpn (bpmnopt branch). Check whether infusion returns the chair token on completion, or trace for a chair taken by another patient between one patient's infusion and observation.
+- Check on Fig. 1: the paper's guard `chair == patient.chair` is not implemented in simpn (bpmnopt @8776bf0). Infusion returns the chair to `idle_chair` on completion. Observation has no `resource_constraint`, so it takes any idle chair. `bind_chair` writes `chair_id`, which nothing reads. Trace: 2,095 patients over 30 FIFO episodes, none observed in their infusion chair (experiments/results/c15_chair_trace_fig1.json). So, by semantics:
+  - simpn as implemented: chairs are pooled, and the idle-chair count is exact.
+  - paper guard + release: R2 needs reserved-chair counts.
+  - paper guard + hold: the idle count is exact, but simpn would need a builder change.
+  (H-002 refuted as stated.) **Chosen: simpn pooled (D-009).** The 20 chairs become an idle-chair count with zero loss. Results are on simpn's model, not on the paper's guard.
+- Open questions: none for Fig. 1 chairs. Optionally report the missing guard to the BPMN+OPT authors with C-16.
 
 ### R3: memoryless durations
 - Level: 1 · Route: safe · Status: Corrected
@@ -49,7 +67,7 @@ Level-wide findings: zero loss, and the optimal policy and tabular Q-learning co
 - Abstraction φ: drop the elapsed time of the exponential event. It must act on elapsed time (observable), not residual time, because sampled but unrevealed event times are latent in BPMN+OPT (Def. 2).
 - Parameters: none · ε_R: 0 · ε_T: 0 · Guarantee: zero loss
 - Check on Fig. 2: exp(10) arrival timing dropped.
-- Check on Fig. 1: exp(10) arrival timing dropped.
+- Check on Fig. 1: arrival timing dropped. simpn's fig1_problem.json uses interarrival exp(mean 6), not exp(10). Check against the paper's Fig. 1.
 - Open questions: none. R3 is the single-phase case of R3b.
 
 ### R3b: phase-type durations

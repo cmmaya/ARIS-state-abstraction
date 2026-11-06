@@ -13,7 +13,7 @@ Verified arithmetic on 2026-11-06, for reference. With φ₁: P1 ~ U(2,4), P2 ~ 
 - Erlang: 36 × (1+27+48) × (1+75+108) = 503,424.
 - Paper's abstraction: 36 × 4 = 144.
 - Other values: e^(−0.1) − e^(−0.14) = 0.035; d_TV(U(2,4), U(3,5)) = 0.5; 18,468 × 0.05 = 923.
-- The φ₂ durations are inferred, not read from the model (C-14).
+- The φ₂ durations were inferred; confirmed against simpn's fig2_problem.json on 2026-11-06 (C-14).
 
 ## A. Level 1 theory (phase 1)
 - [ ] **C-01 · Exactness theorem for R1–R4 on the SMDP.** Prove each rule preserves the joint law of (next abstract state, holding time τ, reward) for every action. That makes φ a model-irrelevance abstraction of the SMDP, not just of the embedded MDP. Done when: proof written and checked (/proof-checker). Links: D-003, claim:level1_horizon_independent. Blocks: C-02, C-20.
@@ -35,8 +35,8 @@ Verified arithmetic on 2026-11-06, for reference. With φ₁: P1 ~ U(2,4), P2 ~ 
 - [ ] **C-13 · Level 3 bound constants.** Verify Abel Lemma 1 (2ε/(1−γ)², confirmed) and the Bertsekas 2012 aggregation bound ε̂/(1−α), including the section number. Settle how either is reported at γ = 1. Links: D-005.
 
 ## D. Model and simulator (simpn, branch bpmnopt)
-- [ ] **C-14 · Fig. 2 parameters.** Read the exact distributions from the model or JSON: arrivals exp(10); oncologist × patient-type durations (φ₂'s U(4,6) and U(5,7) are inferred); routing and tie-breaking (longest waiting); queue cap. Done when: the parameters are recorded in research/abstraction_rules.md. Blocks: C-20, C-21, C-22.
-- [ ] **C-15 · Chair release semantics (H-002).** Check whether infusion returns the chair token on completion, or trace for a chair taken by another patient between one patient's infusion and observation. Held means the idle count is exact. Released means R2 needs reserved-chair counts.
+- [x] **C-14 · Fig. 2 parameters.** Read the exact distributions from the model or JSON: arrivals exp(10); oncologist × patient-type durations (φ₂'s U(4,6) and U(5,7) are inferred); routing and tie-breaking (longest waiting); queue cap. Done when: the parameters are recorded in research/abstraction_rules.md. Blocks: C-20, C-21, C-22. (2026-11-06, evidence: research/abstraction_rules.md "Model parameters"; simpn bpmnopt @8776bf0. φ₂ = U(4,6), U(5,7) confirmed; P(P1) = 0.5; no queue cap in the model (→ C-29); tie-breaking lives in the policies.)
+- [x] **C-15 · Chair release semantics (H-002).** Check whether infusion returns the chair token on completion, or trace for a chair taken by another patient between one patient's infusion and observation. Held means the idle count is exact. Released means R2 needs reserved-chair counts. (2026-11-06, evidence: experiments/results/c15_chair_trace_fig1.json, simpn/prototypes.py:412, fig1_problem.json. Released, and Observation takes any idle chair because the guard is not implemented, so chairs are pooled and the idle count is exact for simpn. H-002 refuted as stated; semantics chosen in D-009.)
 - [ ] **C-16 · `measurements` never read.** Confirm with the BPMN+OPT authors whether routing is meant to ignore clinical state or a constraint is missing. Done when: the answer is recorded and R1's Fig. 1 check is updated.
 
 ## E. Literature and novelty
@@ -69,3 +69,5 @@ Verified arithmetic on 2026-11-06, for reference. With φ₁: P1 ~ U(2,4), P2 ~ 
 ## H. Pending decisions
 - [ ] **C-26 · Phase-type deployment caveat.** Phases are unobservable, so decide whether safe-route guarantees are claimed on the model only, or whether a belief-over-phases (POMDP) treatment is needed. Exponential durations have no such caveat. Done when: a D-id is added.
 - [ ] **C-27 · Venue, timeline, compute budget.** Not yet stated in RESEARCH_BRIEF.md or CLAUDE.md.
+- [x] **C-28 · Fig. 1 chair semantics: paper or simpn?** The paper's Fig. 1 binds the chair (guard `chair == patient.chair`). simpn releases it and lets Observation take any idle chair. The options give different R2 states: pooled (idle count exact), guard + release (reserved-chair counts), guard + hold (idle count exact, needs a simpn builder change). Decide which model the Fig. 1 results are on, and whether to report the gap to the BPMN+OPT authors with C-16. Done when: a D-id is added and R2's Fig. 1 check names the chosen semantics. Links: H-002, D-007. (2026-11-06, evidence: D-009 — simpn pooled; R2 Fig. 1 check updated; reporting to authors optional, with C-16.)
+- [ ] **C-29 · Queue cap K = 5 is ours, not the model's.** simpn's Fig. 2 has unbounded queues, so 324 (and 144, 18,468, 503,424) count states of a model truncated at K = 5. Decide whether C-01 states exactness on the truncated model (with R7 as the only approximation) or on the unbounded model (countable state space, with 324 as a truncated view). Done when: the C-01 statement fixes this and the RQ1 state-count JSONs record K. Links: C-01, C-20, R7.

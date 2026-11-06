@@ -21,9 +21,9 @@ Added · Statement · Test (experiment + metric) · Supported if · Refuted if �
 - Test: read whether infusion returns the chair token on completion, or trace for a chair taken by another patient between one patient's infusion and observation.
 - Supported if: held.
 - Refuted if: released, in which case R2 needs a reserved-chair count.
-- Status: open
-- Evidence: —
-- Links: D-003; research/abstraction_rules.md R2
+- Status: refuted (2026-11-06) as stated. The chair is released when infusion ends. The intended consequence does not follow, though: simpn's Observation has no chair guard, so chairs are a pooled resource and the idle-chair count is still exact for simpn's model. A reserved-chair count is needed only under the paper's guard `chair == patient.chair` combined with release. Chosen semantics: simpn pooled (D-009).
+- Evidence: simpn bpmnopt @8776bf0. `simpn/prototypes.py:412`: the BPMNTask complete event puts the resource token back in its lane. `er_paper/models/fig1_problem.json`: Observation (uncontrolled) has no `resource_constraint`. `bind_chair` writes `chair_id`, which nothing reads. Trace: experiments/results/c15_chair_trace_fig1.json, 30 FIFO episodes, 2,095 patients: 0 observed in their infusion chair, 0 waits, 0 chairs taken in between.
+- Links: D-003; research/abstraction_rules.md R2; C-15, C-28
 
 ### H-003 · Abel bound is non-vacuous for R6/R7 on the safe-route model
 - Added: 2026-11-06
